@@ -3,7 +3,7 @@
 #include <g3dhax.h>
 
 
-const char* TEarcNameList[] = {
+const char* PGarcNameList[] = {
 	"kuribo",
 	"sanbo",
 	"wing",

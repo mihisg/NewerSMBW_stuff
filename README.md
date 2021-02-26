@@ -118,7 +118,7 @@ with your new one. This has to be defined in the ```testSprite.yaml``` and it us
 help to patch data into the wii code. Even though there are four types of hooks, the most important one is ```add_func_pointer```. The other ones are 
 called ```branch_insn```, ```nop_insn``` and ```patch```, but those are used in specific cases and not detailed here.
 But what is important is the ```add_func_pointer``` hook, which patches a function into the code at a specified address. You have to declare it below 
-the linking to the cpp file in your .yaml:
+the linking to the cpp file in your ```.yaml```:
 ```yaml
 ---
 source_files: [../src/testSprite.cpp]
@@ -160,4 +160,23 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
   
 ## Using custom 3D-Models and Animations
 
-TODO....
+When using custom 3D-Models for sprites, they have to be defined in another hook for NSMBW to find it. All new .arc files used by this sprite (they are in the 
+object folder of NSMBW and contain .brres and animations) have to be named in a static list in C++ (usually at the beginning of the sprites cpp file). For
+the testSprite it maybe would look like this:
+```c++
+const char* TestSpritearcNameList [] = {
+    "testSprite",       //first arc file to load for e.g. the model
+    "ball",             //second arc file for e.g. a ball the sprites throws or other stuff
+    NULL                //this is importatnand marks the end of the list
+}
+```
+With this list the game is able to load all necessary files used by the sprite. But we have to connect this list of necessary files with the
+actual sprites who use it, so we will have to add another ```add_func_pointer``` hook into the sprites ```.yaml``` and point to the list containing the resources. 
+In our case the second hook added into the .yaml would be:
+```yaml
+  - name: ShyGuySpriteFileInfo
+    type: add_func_pointer
+    src_addr_pal: 0x8031AE04
+    target_func: 'SGarcNameList'
+```
+The ```src_addr_pal``` is calculated with ```0x8031AB4C + SPRITEID_IN_HEX * 0x4```. So in our case it's ```0x8031AE04```(Sprite id ```174 = 0xAE```)

@@ -147,4 +147,4 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
 - perform the following arithmetic operation: ```0x8030A340 + (0x28 * SPRITE_ID_IN_HEX)```. The result is the number we need to search for in the .elf file.
   In case of our example ```0xAE``` the result would be ```0x8030BE70```
 - now we have to look for that address in the executable file. It will tell us the actual actorID (which is NOT same as the spriteID):
-![Adress](images/first_address)
+![FirstAdress](images/first_address.png)

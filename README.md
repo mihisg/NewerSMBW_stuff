@@ -161,7 +161,7 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
 ## Using custom 3D-Models and Animations
 
 When using custom 3D-Models for sprites, they have to be defined in another hook for NSMBW to find it. All new .arc files used by this sprite (they are in the 
-object folder of NSMBW and contain .brres and animations) have to be named in a static list in C++ (usually at the beginning of the sprites cpp file). For
+object folder of NSMBW and contain .brres and animations) have to be named in a static list in C++ (usually at the beginning of the sprite's cpp file). For
 the testSprite it maybe would look like this:
 ```c++
 const char* TestSpritearcNameList [] = {

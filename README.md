@@ -113,3 +113,6 @@ source_files: [../src/testSprite.cpp]
 ```
 
 ## Adding the sprite into NSMBW with hooks
+The final step (and the most confusing one) is to basically tell the wii to load your new sprite. This is possible by replacing an existing sprite
+with your new one. This has to be defined in the ```testSprite.yaml``` and it uses something called "Hooks". Hooks are type of structures which
+help to patch data into the wii code.

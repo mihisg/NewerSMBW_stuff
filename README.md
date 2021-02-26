@@ -53,7 +53,7 @@ class daTestSprite: public dEn_c {
     //check for collision with tiles like a wall -> sprite should maybe turn
     bool calculateTileCollisions();
     
-    //now all the collision functions. Actually there are a lot, but the most common used are:
+    //now all the collision functions. Actually there are a lot, but the most common used ones are:
     void playerCollision(ActivePhysics* apThis, ActivePhysics apOther);
     void spriteCollision(ActivePhysics* apThis, ActivePhysics apOther);
     void yoshiCollision(ActivePhysics* apThis, ActivePhysics apOther);

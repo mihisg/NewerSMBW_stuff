@@ -102,3 +102,14 @@ class daTestSprite: public dEn_c {
     //So that's basically everything, but now the methods have to be implemented, and this is the real coding part, yeah!
 }
 ```
+- now create a .yaml-file which goes into the root of Kamek and links to the cpp
+```yaml
+---
+source_files: [../src/testSprite.cpp]
+```
+- add the following line in NewerProject.yaml and NewerProjectKP.yaml:
+```yaml
+- processed/testSprite.yaml
+```
+
+## Adding the sprite into NSMBW with hooks

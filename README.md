@@ -87,9 +87,8 @@ class daTestSprite: public dEn_c {
     
     //At last there are the states the sprite can be in. A sprite can be in only one state at a specific time
     //The states are coded seperately
-    //if your sprite does not need multiply states (for example a star coin has just one state, 
-    //which is spinning at one certain point) 
-    //yout don't need the following section
+    //if your sprite does not need multiple states (for example a star coin has just one state, 
+    //which is rotating and not moving) yout won't need the following section
     
     //first make clear that this class can use states
     USING_STATES(daTestEnemy);

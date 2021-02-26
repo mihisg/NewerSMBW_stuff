@@ -138,4 +138,13 @@ So, what are those parameters?
 
 ## Obtaining the src_addr_pal
 
-TODO...
+Depending on which NSMBW sprite to replace, you have to set a different address in the hook. To get those address, you will have to perform some hex-arithmetic
+but you'll also need the official NSMBW .elf executable, which I am not going to provide here. That file has to be opened in a disassembler like IDA or ghidra.
+
+Let's assume we want to replace the unused sprite with id = 174. To obtain the ```src_addr_pal``` for this sprite, do the following steps:
+
+- The sprites are stored in decimal order, so we have to convert it into its hexadecimal representation. ```174``` would be ```0xAE```
+- perform the following arithmetic operation: ```0x8030A340 + (0x28 * SPRITE_ID_IN_HEX)```. The result is the number we need to search for in the .elf file.
+  In case of our example ```0xAE``` the result would be ```0x8030BE70```
+- now we have to look for that address in the executable file. It will tell us the actual actorID (which is NOT same as the spriteID):
+![Adress](images/first_address)

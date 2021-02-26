@@ -99,6 +99,6 @@ class daTestSprite: public dEn_c {
     DECLARE_STATE(Jump);
     DECLARE_STATE(Die);
     
-    //So thats basically everything, but now the methods have to be implemented
+    //So that's basically everything, but now the methods have to be implemented, and this is the real coding part, yeah!
 }
 ```

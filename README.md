@@ -153,4 +153,4 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
 - perform the following arithmetic operation: ```0x8076A748 + (0x4 * ACTOR_ID_FROM_TABLE)```. The result is the new number we need to search for in the .elf file.
   In case of our example ```0xDE``` the result would be ```0x8076AAC0```
 - now we have to look again for that address in the executable file. It will finally tell us our ```src_addr_pal```:
-![SecondAddress](images(second_address.png)
+![SecondAddress](images/second_address.png)

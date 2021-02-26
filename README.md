@@ -8,7 +8,7 @@ ___
 - First create a .cpp file that goes in /src/ -> This file will contain all the code for the custom sprite. A basic structure would be:
 ```c++
 #include <common.h>       //some common functions and useful stuff
-#include <game.h>         //main game functions, most important include-file. Almost everything you use from NSMBW is located here
+#include <game.h>         //main game functions, most important file. Almost everything you use from NSMBW is located here
 #include <g3dhax.h>       //Used for displaying 3d-models and updating graphics
 #include <sfx.h>          //sound effects which can be played by this sprite (e.g. die-sound when Mario jumps on it)
 
@@ -87,7 +87,8 @@ class daTestSprite: public dEn_c {
     
     //At last there are the states the sprite can be in. A sprite can be in only one state at a specific time
     //The states are coded seperately
-    //if your sprite does not need multiply states (for example a star coin has just one state, which is spinning at one certain point) 
+    //if your sprite does not need multiply states (for example a star coin has just one state, 
+    //which is spinning at one certain point) 
     //yout don't need the following section
     
     //first make clear that this class can use states

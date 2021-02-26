@@ -58,19 +58,32 @@ class daTestSprite: public dEn_c {
     void spriteCollision(ActivePhysics* apThis, ActivePhysics apOther);
     void yoshiCollision(ActivePhysics* apThis, ActivePhysics apOther);
     
-    bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);		                  //collision with Mario when he has a Star
-	  bool collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther);					                //collision with sliding-Mario
-	  bool collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther);					                //Player drills with Propeller
-	  bool collisionCat8_FencePunch(ActivePhysics *apThis, ActivePhysics *apOther);				              //Player punches fence behind
-	  bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther);				            //When Player ground pounds
-	  bool collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther);			          //Player groundpounds with yoshi
-	  bool collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther);				            //When Player slides with penguin suit
-	  bool collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther);				            //When player is shot from pipe cannon
-	  bool collisionCat9_RollingObject(ActivePhysics *apThis, ActivePhysics *apOther);			            //when object is thrown on Sprite (koopa-shell, barrel)
-	  bool collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther);		        //collision with fireball
-	  bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther);		        //collides with iceball
-	  bool collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther);					              //collides with hammer from the hammer-suit-powerup
-	  bool collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther);	                    //when collides with yosgi fire spit
+    //collision with Mario when he has a Star
+    bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);	
+    //collision with sliding-Mario
+    bool collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther);
+    //Player drills with Propeller
+    bool collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther);
+    //Player punches fence behind
+    bool collisionCat8_FencePunch(ActivePhysics *apThis, ActivePhysics *apOther);	
+    //When Player ground pounds
+    bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther);
+     //Player groundpounds with yoshi
+    bool collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther);	
+    //When Player slides with penguin suit
+    bool collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther);	
+    //When player is shot from pipe cannon
+    bool collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther);
+    //when object is thrown on Sprite (koopa-shell, barrel)
+    bool collisionCat9_RollingObject(ActivePhysics *apThis, ActivePhysics *apOther);		
+    //collision with fireball
+    bool collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther);
+    //collides with iceball
+    bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther);		        
+    //collides with hammer from the hammer-suit-powerup
+    bool collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther);	
+    //when collides with yosgi fire spit
+    bool collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther);	                  
     
     //At last there are the states the sprite can be in. A sprite can be in only one state at a specific time
     //The states are coded seperately

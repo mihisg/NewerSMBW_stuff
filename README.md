@@ -115,4 +115,27 @@ source_files: [../src/testSprite.cpp]
 ## Adding the sprite into NSMBW with hooks
 The final step (and the most confusing one) is to basically tell the wii to load your new sprite. This is possible by replacing an existing sprite
 with your new one. This has to be defined in the ```testSprite.yaml``` and it uses something called "Hooks". Hooks are type of structures which
-help to patch data into the wii code.
+help to patch data into the wii code. Even though there are four types of hooks, the most important one is ```add_func_pointer```. The other ones are 
+called ```branch_insn```, ```nop_insn``` and ```patch```, but those are used in specific cases and not detailed here.
+But what is important is the ```add_func_pointer``` hook, which patches a function into the code at a specified address. You have to declare it below 
+the linking to the cpp file in your .yaml:
+```yaml
+---
+source_files: [../src/testSprite.cpp]
+hooks:
+    - name: TestEnemyBuild
+      type: add_func_pointer
+      src_addr_pal: 0x80B00A98
+      target_func: 'daTestEnemy::build()'
+```
+So, what are those parameters?
+
+- name: The name of the hook. This can be anything, but should be something which explains the purpose of the hook
+- type: This is the type of the hook. As metioned earlier, there are four types, but the most common used is ```add_func_pointer```
+- src_addr_pal: Here is where things get complicated. This is the address of where to patch the function. Depends on which sprite to replace.
+                This will be explained in detail in the next section
+- target_func: This is the actual function the hook patches into the code. Should be the sprites ```build()``` function, which creates a new sprite-object
+
+## Obtaining the src_addr_pal
+
+TODO...

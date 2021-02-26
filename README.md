@@ -147,10 +147,13 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
 - perform the following arithmetic operation: ```0x8030A340 + (0x28 * SPRITE_ID_IN_HEX)```. The result is the number we need to search for in the .elf file.
   In case of our example ```0xAE``` the result would be ```0x8030BE70```
 - now we have to look for that address in the executable file. It will tell us the actual actorID (which is NOT same as the spriteID):
-![FirstAdress](images/first_address.png)
+  ![FirstAdress](images/first_address.png)
+  
   Right next to our number there is the value we are looking for, in our case ```0x00de```, which is the same as ```0xDE```
 
 - perform the following arithmetic operation: ```0x8076A748 + (0x4 * ACTOR_ID_FROM_TABLE)```. The result is the new number we need to search for in the .elf file.
   In case of our example ```0xDE``` the result would be ```0x8076AAC0```
 - now we have to look again for that address in the executable file. It will finally tell us our ```src_addr_pal```:
-![SecondAddress](images/second_address.png)
+  ![SecondAddress](images/second_address.png)
+  
+  So after the ```PTR_FUN``` there finally is our ```src_addr_pal```. In our case it's ```0x80B00A98```, which is in fact exactly the address from the above .yaml

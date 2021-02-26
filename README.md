@@ -157,3 +157,7 @@ Let's assume we want to replace the unused sprite with id = 174. To obtain the `
   ![SecondAddress](images/second_address.png)
   
   So after the ```PTR_FUN``` there finally is our ```src_addr_pal```. In our case it's ```0x80B00A98```, which is in fact exactly the address from the above .yaml
+  
+## Using custom 3D-Models and Animations
+
+TODO....

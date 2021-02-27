@@ -116,7 +116,7 @@ source_files: [../src/testSprite.cpp]
 The final step (and the most confusing one) is to basically tell the wii to load your new sprite. This is possible by replacing an existing sprite
 with your new one. This has to be defined in the ```testSprite.yaml``` and it uses something called "Hooks". Hooks are type of structures which
 help to patch data into the wii code. Even though there are four types of hooks, the most important one is ```add_func_pointer```. The other ones are 
-called ```branch_insn```(changes instruction for a branch to custom assembly), ```nop_insn```(disables lines of code in NSMBW) and ```patch```(replace bytes manually), but those are used in specific cases and not detailed here.
+called ```branch_insn```(changes instruction for a branch to custom assembly), ```nop_insn```(disables lines of code in NSMBW) and ```patch```(replace bytes manually), but those are used in specific cases and not detailed here (except for the ```patch``` later on).
 But what is important is the ```add_func_pointer``` hook, which patches a function into the code at a specified address. You have to declare it below 
 the linking to the cpp file in your ```.yaml```:
 ```yaml
@@ -180,3 +180,7 @@ In our case the second hook added into the .yaml would be:
     target_func: 'SGarcNameList'
 ```
 The ```src_addr_pal``` is calculated with ```0x8031AB4C + SPRITEID_IN_HEX * 0x4```. So in our case it's ```0x8031AE04```(Sprite id ```174 = 0xAE```)
+
+## Adjusting data by using the ```patch``` hook
+
+This hook lets you replace custom bytes in the game. It can be used to change the values of an Entity such like the spawningoffset.

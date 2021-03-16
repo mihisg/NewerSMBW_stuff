@@ -11,10 +11,14 @@ const char* SBarcNameList[] = {
 
 class daBossSanbo : daBoss {
 	//Let's take some functions and add them to this boss
-	int onCreate();
-	int onDelete();
-	int onExecute();
-	int onDraw();
+	//this overrides the dEn_c virtual functions 
+	int onCreate();		//called when Pokey is created
+	int onDelete();		//called when Pokey is deleted
+	int onExecute();	//called every frame and updates the Pokey
+	int onDraw();		//called every frame and draws the pokey
+
+	//called after the onExecute. Clears up the ActivePhysics to make them not disappear. 
+	int afterExecute(int param);	//Overrides dEn_c virtual funtion
 
 	//for loading the 3d model
 	mHeapAllocator_c allocator;
@@ -24,14 +28,21 @@ class daBossSanbo : daBoss {
 	m3d::mdl_c headModelSpike;
 	m3d::mdl_c headModelOrange;
 	m3d::mdl_c bodyModels[4];
+
+	//positions and rotations for the body parts
 	Vec bodyPositions[5];
 	S16Vec bodyRotations[5];
+
+	//periode used by the sin to calculate the movement of the pokey
 	float transPeriode = 0.979f;
+	
+	//rotations
 	float rotSpeed[5] = {
 		0.11f, 0.12f, 0.125f, 0.12f, 0.14f 
 	};
 	s16 headRot = 0xE800;
 
+	//the physics objects of the pokey
 	ActivePhysics bodyPhysics[5];
 	
 
@@ -45,7 +56,9 @@ class daBossSanbo : daBoss {
 	Vec initialPos;
 	char damage;
 	char isInvulnerable;
+	//the target is the player the pokey will follow
 	dAc_Py_c* target;
+	//how many body parts are left?
 	int activeObjects;
 
 	//for building the boss and loading it on the screen
@@ -58,26 +71,29 @@ class daBossSanbo : daBoss {
 	void updateModelMatrices();
 
 	//collision functions
+	//called before collision with player -> does the player make a ground pound? Then directly go to collisionCat7_GroundPound
 	bool prePlayerCollision(ActivePhysics* apThis, ActivePhysics* apOther);
+	//called on collision with normal Mario while walking, jumping or spinning
 	void playerCollision(ActivePhysics* apThis, ActivePhysics* apOther);
 
-	bool collisionCat3_StarPower(ActivePhysics* apThis, ActivePhysics* apOther);		//ja
-	bool collisionCatD_Drill(ActivePhysics* apThis, ActivePhysics* apOther);			//ja
-	bool collisionCat7_GroundPound(ActivePhysics* apThis, ActivePhysics* apOther);		//ja
-	bool collisionCat9_RollingObject(ActivePhysics* apThis, ActivePhysics* apOther);	//ja
-	bool collisionCat1_Fireball_E_Explosion(ActivePhysics* apThis, ActivePhysics* apOther); //ja
-	bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics* apThis, ActivePhysics* apOther);	//ja
-	bool collisionCat13_Hammer(ActivePhysics* apThis, ActivePhysics* apOther);				//ja
-	bool collisionCatA_PenguinMario(ActivePhysics* apThis, ActivePhysics* apOther);			//ja
+	//special collisions called in specific cases
+	bool collisionCat3_StarPower(ActivePhysics* apThis, ActivePhysics* apOther);		
+	bool collisionCatD_Drill(ActivePhysics* apThis, ActivePhysics* apOther);			
+	bool collisionCat7_GroundPound(ActivePhysics* apThis, ActivePhysics* apOther);		
+	bool collisionCat9_RollingObject(ActivePhysics* apThis, ActivePhysics* apOther);	
+	bool collisionCat1_Fireball_E_Explosion(ActivePhysics* apThis, ActivePhysics* apOther); 
+	bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics* apThis, ActivePhysics* apOther);	
+	bool collisionCat13_Hammer(ActivePhysics* apThis, ActivePhysics* apOther);				
+	bool collisionCatA_PenguinMario(ActivePhysics* apThis, ActivePhysics* apOther);			
 
 	//other functions if needed
 	int nearestPlayer();			//returns a random player of max 4 players. This is the Player the boss will follow
-	void addScoreWhenHit(void* other);
-	void smoothMovement();
-	bool IntroduceBoss(daKameckDemo* Kameck, int timer);
-	void removeMyActivePhysics();
-	void addMyActivePhysics();
-	void createMyActivePhysics();
+	void addScoreWhenHit(void* other);	//no score is given when hit
+	void smoothMovement();				//pokey-typical movement -> rotating and moving the body parts back and fourth
+	bool IntroduceBoss(daKameckDemo* Kameck, int timer);	//Kamek spawns the boss at the beginning
+	void removeMyActivePhysics();		//delete Physics and don't listen to collision anymore
+	void addMyActivePhysics();			//restore physics and start listening to collision
+	void createMyActivePhysics();		//creates the physics -> should be called once in onCreate
 
 	//Now tell the game that we are using states in this class
 	USING_STATES(daBossSanbo);
@@ -155,7 +171,7 @@ void daBossSanbo::playerCollision(ActivePhysics* apThis, ActivePhysics* apOther)
 }
 
 bool daBossSanbo::collisionCat3_StarPower(ActivePhysics* apThis, ActivePhysics* apOther) {
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCatD_Drill(ActivePhysics* apThis, ActivePhysics* apOther) {
@@ -197,24 +213,24 @@ bool daBossSanbo::collisionCat9_RollingObject(ActivePhysics* apThis, ActivePhysi
 
 	//if (this->damage > 14) { /*doStateChange(&StateID_Outro);*/ }
 	//else { /*doStateChange(&StateID_GoDown);*/ }
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCat1_Fireball_E_Explosion(ActivePhysics* apThis, ActivePhysics* apOther) {
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCat2_IceBall_15_YoshiIce(ActivePhysics* apThis, ActivePhysics* apOther) {
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCatA_PenguinMario(ActivePhysics* apThis, ActivePhysics* apOther) {
 	DamagePlayer(this, apThis, apOther);
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCat13_Hammer(ActivePhysics* apThis, ActivePhysics* apOther) {
-	return false;
+	return true;
 }
 
 bool daBossSanbo::collisionCat7_GroundPound(ActivePhysics* apThis, ActivePhysics* apOther) {
@@ -336,6 +352,13 @@ int daBossSanbo::onExecute() {
 	updateModelMatrices();
 
 	return true;
+}
+
+int daBossSanbo::afterExecute(int param) {
+	for (int i = 0; i <= activeObjects; i++) {
+		bodyPhysics[i].clear();
+	}
+	return dEn_c::afterExecute(param);
 }
 
 int daBossSanbo::onDraw() {
@@ -697,7 +720,7 @@ void daBossSanbo::createMyActivePhysics() {
 		HitMeBaby.category2 = 0x0;
 		HitMeBaby.bitfield1 = 0x4F;
 		//HitMeBaby.bitfield2 = 0x8028E;
-		HitMeBaby.bitfield2 = 0xFFBAFFFE;
+		HitMeBaby.bitfield2 = 0xFFBA7FFE;
 		HitMeBaby.unkShort1C = 0;
 		HitMeBaby.callback = &dEn_c::collisionCallback;
 

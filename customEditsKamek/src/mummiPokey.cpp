@@ -90,6 +90,7 @@ class daBossSanbo : daBoss {
 	int nearestPlayer();			//returns a random player of max 4 players. This is the Player the boss will follow
 	void addScoreWhenHit(void* other);	//no score is given when hit
 	void smoothMovement();				//pokey-typical movement -> rotating and moving the body parts back and fourth
+	void updatePositionsSimple();
 	bool IntroduceBoss(daKameckDemo* Kameck, int timer);	//Kamek spawns the boss at the beginning
 	void removeMyActivePhysics();		//delete Physics and don't listen to collision anymore
 	void addMyActivePhysics();			//restore physics and start listening to collision
@@ -103,12 +104,12 @@ class daBossSanbo : daBoss {
 	DECLARE_STATE(Walk);
 	DECLARE_STATE(Spit);
 	DECLARE_STATE(GoDown);
-	//DECLARE_STATE(ComeUp);
+	DECLARE_STATE(ComeUp);
 	//DECLARE_STATE(Peek);
 	//DECLARE_STATE(Fake);
 	//DECLARE_STATE(Damage);
-	//DECLARE_STATE(Wait);
-	//DECLARE_STATE(Outro);
+	DECLARE_STATE(Wait);
+	DECLARE_STATE(Outro);
 };
 
 
@@ -120,9 +121,10 @@ CREATE_STATE(daBossSanbo, Intro);
 CREATE_STATE(daBossSanbo, Walk);
 CREATE_STATE(daBossSanbo, Spit);
 CREATE_STATE(daBossSanbo, GoDown);
-//CREATE_STATE(daBossSanbo, ComeUp);
+CREATE_STATE(daBossSanbo, ComeUp);
+CREATE_STATE(daBossSanbo, Wait);
 //CREATE_STATE(daBossSanbo, Damage);
-//CREATE_STATE(daBossSanbo, Outro);
+CREATE_STATE(daBossSanbo, Outro);
 
 
 ///
@@ -199,20 +201,12 @@ bool daBossSanbo::collisionCat9_RollingObject(ActivePhysics* apThis, ActivePhysi
 	this->pos.x -= blah->speed.x;
 	smoothMovement();
 
-	/*this->damage = this->damage + 5;
-	this->activeObjects -= 1;
-	this->bodyPhysics[activeObjects].removeFromList();*/
-
 
 	PlaySound(this, SE_EMY_DOWN);
 	S16Vec nullRot = { 0,0,0 };
 	Vec oneVec = { 1.0f, 1.0f, 1.0f };
 	SpawnEffect("Wm_mr_kickhit", 0, &blah->pos, &nullRot, &oneVec);
 
-	//for testing
-
-	//if (this->damage > 14) { /*doStateChange(&StateID_Outro);*/ }
-	//else { /*doStateChange(&StateID_GoDown);*/ }
 	return true;
 }
 
@@ -263,7 +257,7 @@ bool daBossSanbo::collisionCat7_GroundPound(ActivePhysics* apThis, ActivePhysics
 		apOther->someFlagByte |= 2;
 		PlaySoundAsync(this, SE_EMY_DOWN);
 		if (this->damage > 14) {
-			//doStateChange(&StateID_Outro);
+			doStateChange(&StateID_Outro);
 		}
 		else {
 			doStateChange(&StateID_GoDown);
@@ -560,13 +554,13 @@ void daBossSanbo::executeState_Spit() {
 
 		f32 dx = target->pos.x - this->bodyPositions[this->activeObjects].x;
 		f32 dy = target->pos.y - this->bodyPositions[this->activeObjects].y;
-		dStageActor_c* spawner = CreateActor(106, 0, this->bodyPositions[this->activeObjects], 0, 0);
+		dStageActor_c* spawner = CreateActor(105, 0, this->bodyPositions[this->activeObjects], 0, 0);
 		PlaySound(this, SE_BOSS_JR_FIRE_SHOT);
 
 		float normalizer = sqrtf(dx * dx + dy * dy);
 
-		spawner->speed.x = 4 * (1 / normalizer) * dx;
-		spawner->speed.y = 4 * (1 / normalizer) * dy;
+		spawner->speed.x = 3.5 * (1 / normalizer) * dx;
+		spawner->speed.y = 3.5 * (1 / normalizer) * dy;
 		spawner->scale = (Vec){ 2.0, 2.0, 2.0 };
 	}
 
@@ -583,24 +577,157 @@ void daBossSanbo::endState_Spit() {
 void daBossSanbo::beginState_GoDown() {
 	this->timer = 0;
 	this->pos.z = -3000;
-	this->isInvulnerable = 1;
 	this->removeMyActivePhysics();
+	for (int i = 0; i < activeObjects + 1; i++) {
+		bodyPositions[i].x = this->pos.x;
+	}
 }
 
 void daBossSanbo::executeState_GoDown() {
 	this->timer += 1;
-	if ((timer > 150) && (timer < 230)) {
-		//ShakeScreen(this, 2, 1, 1, 0);
-		this->pos.y -= 4.7 - 0.07 * (timer - 150);
+	if (timer == 1) {
+		Vec tempPos = (Vec){ this->pos.x, this->BaseLine - 12.0f, this->pos.z };
+		S16Vec nullRot = { 0,0,0 };
+		Vec oneVec = { 2.0f, 1.0f, 1.0f };
+		SpawnEffect("Wm_mr_sanddive_out", 0, &tempPos, &nullRot, &oneVec);
+		SpawnEffect("Wm_mr_sanddive_smk", 0, &tempPos, &nullRot, &oneVec);
 	}
-	smoothMovement();
+	if ((timer > 10) && (timer < 51)) {
+		//ShakeScreen(this, 2, 1, 1, 0);
+		this->pos.y -= 0.18 * (timer - 10);
+		updatePositionsSimple();
+	}
+	for (int i = 0; i < activeObjects + 1; i++) {
+		if (i % 2 == 0) {
+			bodyRotations[i].y += (0x10000 / 17);
+		}
+		else {
+			bodyRotations[i].y -= (0x10000 / 17);
+		}
+	}
+	if (timer > 51) {
+		doStateChange(&StateID_Wait);
+	}
+	
 }
 
 void daBossSanbo::endState_GoDown() {
+	addMyActivePhysics();
+}
+
+
+void daBossSanbo::beginState_Wait() {
+	this->timer = 0;
+	this->target = GetSpecificPlayerActor(this->nearestPlayer());
+	this->pos.y = this->BaseLine - 152.f;
+	updatePositionsSimple();
+}
+
+void daBossSanbo::executeState_Wait() {
+	this->timer += 1;
+	if (timer > 150) {
+		if (isInvulnerable == 0) {
+			if (timer < 1000) {
+				if (abs(this->target->pos.x - this->pos.x) > 10) {
+					if (this->target->pos.x > this->pos.x) {
+						this->speed.x = 3.0f;
+					}
+					else if (this->target->pos.x < this->pos.x) {
+						this->speed.x = -3.0f;
+					}
+
+					this->pos.x += this->speed.x;
+					updatePositionsSimple();
+				}
+				else {
+					doStateChange(&StateID_ComeUp);
+				}
+			}
+			else {
+				doStateChange(&StateID_ComeUp);
+			}
+		}
+		else {
+			this->pos.x = target->pos.x;
+			updatePositionsSimple();
+			//doStateChange(&StateID_Damage);
+		}
+	}
+}
+
+void daBossSanbo::endState_Wait() {
 
 }
 
 
+void daBossSanbo::beginState_ComeUp() {
+	this->timer = 0;
+}
+
+void daBossSanbo::executeState_ComeUp() {
+	timer += 1;
+	Vec tempPos2 = (Vec){ this->pos.x, this->BaseLine - 12.0f, this->pos.z };
+	S16Vec nullRot2 = { 0,0,0 };
+	Vec oneVec2 = { 2.0f, 1.0f, 1.0f };
+
+	if (timer == 1) {
+		SpawnEffect("Wm_mr_sanddive_out", 0, &tempPos2, &nullRot2, &oneVec2);
+		SpawnEffect("Wm_mr_sanddive_smk", 0, &tempPos2, &nullRot2, &oneVec2);
+	}
+
+
+	if ((timer > 0) && (timer < 80)) {
+		//ShakeScreen(this, 2, 1, 1, 0);
+		this->pos.y += 4.7 - 0.07 * (timer);
+		updatePositionsSimple();
+		for (int i = 0; i < activeObjects + 1; i++) {
+			if (i % 2 == 0) {
+				bodyRotations[i].y += (0x10000 / 20);
+			}
+			else {
+				bodyRotations[i].y -= (0x10000 / 20);
+			}
+		}
+	}
+	if (timer > 81) {
+		doStateChange(&StateID_Walk);
+	}
+}
+
+void daBossSanbo::endState_ComeUp() {
+	this->pos.z = 4000.0;
+}
+
+
+void daBossSanbo::beginState_Outro() {
+	OutroSetup(this);
+}
+
+void daBossSanbo::executeState_Outro() {
+	if (this->dying == 1) {
+		if (this->timer > 220) {
+			ExitStage(WORLD_MAP, 0, BEAT_LEVEL, MARIO_WIPE);
+		}
+		if (this->timer == 100) {
+			PlayerVictoryCries(this);
+		}
+		this->timer += 1;
+		return;
+	}
+
+	bool ret;
+	ret = ShrinkBoss(this, &this->pos, 2.75, this->timer);
+	if (ret == true) {
+		BossExplode(this, &this->pos);
+		this->dying = 1;
+		this->timer = 0;
+	}
+	this->timer += 1;
+}
+
+void daBossSanbo::endState_Outro() {
+
+}
 
 bool daBossSanbo::IntroduceBoss(daKameckDemo* Kameck, int timer) {
 	if (timer == 130) { this->Kameck->doStateChange(&daKameckDemo::StateID_DemoSt); }
@@ -620,7 +747,15 @@ bool daBossSanbo::IntroduceBoss(daKameckDemo* Kameck, int timer) {
 	if ((timer > 150) && (timer < 230)) {
 		//ShakeScreen(this, 2, 1, 1, 0);
 		this->pos.y += 4.7 - 0.07 * (timer - 150);
-		smoothMovement();
+		updatePositionsSimple();
+		for (int i = 0; i < activeObjects + 1; i++) {
+			if (i % 2 == 0) {
+				bodyRotations[i].y += (0x10000 / 20);
+			}
+			else {
+				bodyRotations[i].y -= (0x10000 / 20);
+			}
+		}
 	} 
 	if (timer > 230) {
 		smoothMovement();
@@ -670,6 +805,15 @@ void daBossSanbo::smoothMovement() {
 
 	this->bodyRotations[activeObjects].y = (int)(sin(this->rotSpeed[4] * this->movementTimer) * 0x800) + this->headRot;
 	
+}
+
+void daBossSanbo::updatePositionsSimple() {
+	for (int i = 0; i < activeObjects + 1; i++)
+	{
+		this->bodyPositions[i].x = this->pos.x;
+		this->bodyPositions[i].y = this->pos.y + 24.0 * i;
+		this->bodyPositions[i].z = this->pos.z + 100 * i;
+	}
 }
 
 int daBossSanbo::nearestPlayer() {

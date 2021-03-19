@@ -539,6 +539,7 @@ static void collisionCallback(ActivePhysics* one, ActivePhysics* two) {
 	dStageActor_c* var6 = two->owner;
 	
 	if(var7[1].field_0xa0 == 0) {
+		//stageActorType: 0=Normal 1=Player 2=Yoshi 3=Entity
 		if(var6->stageActorType == 3) {
 			bool s = dEn_c::preSpriteCollision(one, two);
 			if(s == 0) {

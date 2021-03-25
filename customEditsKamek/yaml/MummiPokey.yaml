@@ -1,0 +1,12 @@
+---
+source_files: [../src/mummiPokey.cpp]
+hooks:
+    - name: MummiBuild
+      type: add_func_pointer
+      src_addr_pal: 0x80B00A98
+      target_func: 'daBossSanbo::build()'
+
+    - name: MummiSpriteFileInfo
+      type: add_func_pointer
+      src_addr_pal: 0x8031AE04
+      target_func: 'SBarcNameList'

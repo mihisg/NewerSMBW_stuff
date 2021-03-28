@@ -1,7 +1,7 @@
 # Collision and Callbacks - The ActivePhysics
 
 The ActivePhysics-class is necessary for collision detection between two sprites. There is another class which deals with collision, called ``Physics``, but this class is used
-for collision with solid objects like a wall or the ground, where Mario can't move through. But the ``ActivePhysics`` are for collision between two actors and can have custom callbacks, for example the clock should not be solid, but it should disappear and increase the timer when collided with the player. And this is where the ActivePhysics comes intoplay. It defines a hitbox for your sprite and reacts to collision with other sprites/powerups/...
+for collision with solid objects like a wall or the ground, where Mario can't move through. But the ``ActivePhysics`` are for collision between two actors and can have custom callbacks, for example a clock should not be solid, but it should disappear and increase the timer when collided with the player. And this is where the ActivePhysics comes into play. It defines a hitbox for your sprite and reacts to collision with other sprites/powerups/...
 ___
 ## Adding and removing ActivePhysics - The ``aPhysics`` object 
 

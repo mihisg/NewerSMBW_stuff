@@ -534,7 +534,7 @@ virtual void dEn_c::yoshiCollision(ActivePhysics* apThis, ActivePhysics* apOther
 	}
 }
 
-static void collisionCallback(ActivePhysics* one, ActivePhysics* two) {
+static void dEn_c::collisionCallback(ActivePhysics* one, ActivePhysics* two) {
 	dStageActor_c* var7 = one->owner;
 	dStageActor_c* var6 = two->owner;
 	

@@ -58,8 +58,62 @@ where Player/Yoshi A refer to a normal Player/Yoshi hitbox (when walking or stan
 ### Bitfields
 The bitfields determine what this sprite can collide with. When a collision between two actors occur, the categories and bitfields are combined to check if there is
 a callback for this collision which should be called. ``bitfield1`` is a 8-bit integer, and every bit specifies a collision-type. For a collision between actors A and
-B to occur, then ``A.bitfield1 & (1 << B.category1)`` must be non-zero, and ``B.bitfield1 & (A.category1)`` must also be non zero. This means, at the beginning you have your 8-bit value ``0000 0000``. If your sprite should be able to collide with normal Mario, which has ``category1 = 0``, then the right most bit of your ``bitfield1`` has to be set to 1. If it should be able to collide with attacking-Mario(``category1 = 1``), then the second bit has to be set to 1. So we have
-``bitfield1 = 0000 0011``. If your sprite can collide with other sprites(``category1 = 3``), the fourth bit has to be set to 1. Same for the other bits(fifth bit if it should collide with a balloon, sixth bit if shold collide with collectibles, seventh if should collide with fireballs/iceballs. Btw: No idea what the third and eight bit are doing, just set the third to 1 and the eight to 0). So a normal sprite would have a value like ``01001111`` which is ``bitfield1 = 4F`` in hex. 
+B to occur, then ``A.bitfield1 & (1 << B.category1)`` must be non-zero, and ``B.bitfield1 & (1 << A.category1)`` must also be non zero. This means, at the beginning you have your 8-bit value ``0000 0000``. If your sprite should be able to collide with normal Mario, which has ``category1 = 0``, then the right most bit of your ``bitfield1`` has to be set to 1. If it should be able to collide with attacking-Mario(``category1 = 1``), then the second bit has to be set to 1. So we have
+``bitfield1 = 0000 0011``. If your sprite can collide with other sprites(``category1 = 3``), the fourth bit has to be set to 1. Same for the other bits(fifth bit if it should collide with a balloon, sixth bit if shold collide with collectibles, seventh if should collide with fireballs/iceballs. Btw: No idea what the third and eight bit are doing, just set the third to 1 and the eight to 0). So a normal sprite would have a value like ``01001111`` which is ``bitfield1 = 0x4F`` in hex. 
 
 --- 
-fdsf
+``bitfield2`` and ``category2`` have the same connection, nut are only used when ``category1 == 1``, which is a collision with Player/Yoshi while he's attacking. Then ``bitfield2`` and ``category2`` determine what kind of attack is currently performed and if the sprite should react to it. the second bitfield is a 32-bit integer, and it is calculated by setting each bit to 0 or 1 based on if the sprite can collide with the apropriate attack. So the order of bits is from right to left:
+```
+0 = ???
+1 = Fire
+2 = Ice
+3 = Star
+4 = ???
+5 = Slip (slide)
+6 = ???
+7 = HipAttk/HipAttack (ground pound)
+8 = WireNet/NetPunch (hitting fence)
+9 = Shell
+10 = PenguinSlide/PenguinSlip (penguin slide)
+11 = Spin
+12 = ???
+13 = SpinFall
+14 = Fire(No FireBall, but like an explosion)
+15 = YoshiEat
+16 = YoshiMouth
+17 = Cannon
+18 = SpinLiftUp
+19 = YoshiBullet
+20 = YoshiFire
+21 = Ice(another one???)
+```
+Every bit above 21 is probably unused, they can be set to 1. A typical value for bitfield2 would be: ``11111111101110101111111111111110`` -> ``bitfield2 = 0xFFBAFFFE``
+
+### unkShort1C
+This is a very strange value, I don't know much about it, but when ``unkShort1C & 4 != 0`` then the collision callback will just be executed for this sprite and not for the other object which collides with this one. But typically you don't want that, so just set ``unkShort1C = 0`` in most cases
+
+### CollisionCallback
+If a collision occurs, then this function will be called. It usually takes two ``ActivePhysics``-pointers (the two objects that collide at the moment) and performs the action specified in this function. This function should usually be set to ``dEn_c::collisionCallback(ActivePhysics *one, ActivePhysics *two)`` since this function performs the category-bitfield check explained above and also calls the right function depending on what type of collision it is. But you can also set the ``callback`` to a custom function if needed.
+
+### Putting everything together
+So to create an actual ActivePhysics-object for your sprite, you should first create a ``ActivePhysics::Info`` object in the ``onCreate`` method of your sprite. After 
+that you can initialize your ``aPhysics`` variable with this ``info`` you created by calling ``this->aPhysics.void initWithStruct(dActor_c *owner, const Info *info)``
+At last you have to add it to the list so it is updated every frame(``aPhysics.addToList()``)
+```c++
+ActivePhysics::Info PhysicsInfo;
+PhysicsInfo.xDistToCenter = 0.0;
+PhysicsInfo.yDistToCenter = 8.0;
+PhysicsInfo.xDistToEdge = 8.0;
+PhysicsInfo.yDistToEdge = 8.0;
+PhysicsInfo.category1 = 0x4;
+PhysicsInfo.category2 = 0x0;
+PhysicsInfo.bitfield1 = 0x4F;
+PhysicsInfo.bitfield2 = 0xFFBAFFFE;
+PhysicsInfo.unkShort1C = 0;
+PhysicsInfo.callback = &dEn_c::collisionCallback;
+
+this->aPhysics.initWithStruct(this, &HitMeBaby);
+this->aPhysics.addToList();
+```
+
+## Collision Callbacks

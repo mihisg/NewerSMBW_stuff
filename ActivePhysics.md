@@ -2,9 +2,8 @@
 ___
 
 The ActivePhysics-class is necessary for collision detection between two sprites. There is another class which deals with collision, called ``Physics``, but this class is used
-for collision with solid objects like a wall or the ground, where Mario can't move through. But the ``ActivePhysics`` are for collision between two actors and can have custom 
-callbacks, for example the clock should not be solid, but it should disappear and increase the timer when collided with the player. And this is where the ActivePhysics comes into
-play. It defines a hitbox for your sprite and reacts to collision with other sprites/powerups/...
+for collision with solid objects like a wall or the ground, where Mario can't move through. But the ``ActivePhysics`` are for collision between two actors and can have custom callbacks, for example the clock should not be solid, but it should disappear and increase the timer when collided with the player. And this is where the ActivePhysics comes intoplay. It defines a hitbox for your sprite and reacts to collision with other sprites/powerups/...
+___
 So to start it is necessary to say that every sprite which inherits from ``dEn_c`` (Standard sprite class, most of custom sprites should inherit from this) already has an ActivePhysics-object.
 This object is called ``aPhysics`` and can be used everywhere inside your sprite-class. But this ActivePhysics won't do anything if it is not initialized manually inside the sprite class. 
 Usually the intialization part is done in ``onCreate`` when the sprite is loaded and created. But how can we actually initialize it?

@@ -60,8 +60,7 @@ The bitfields determine what this sprite can collide with. When a collision betw
 a callback for this collision which should be called. ``bitfield1`` is a 8-bit integer, and every bit specifies a collision-type. For a collision between actors A and
 B to occur, then ``A.bitfield1 & (1 << B.category1)`` must be non-zero, and ``B.bitfield1 & (1 << A.category1)`` must also be non zero. This means, at the beginning you have your 8-bit value ``0000 0000``. If your sprite should be able to collide with normal Mario, which has ``category1 = 0``, then the right most bit of your ``bitfield1`` has to be set to 1. If it should be able to collide with attacking-Mario(``category1 = 1``), then the second bit has to be set to 1. So we have
 ``bitfield1 = 0000 0011``. If your sprite can collide with other sprites(``category1 = 3``), the fourth bit has to be set to 1. Same for the other bits(fifth bit if it should collide with a balloon, sixth bit if shold collide with collectibles, seventh if should collide with fireballs/iceballs. Btw: No idea what the third and eight bit are doing, just set the third to 1 and the eight to 0). So a normal sprite would have a value like ``01001111`` which is ``bitfield1 = 0x4F`` in hex. 
-
---- 
+---
 ``bitfield2`` and ``category2`` have the same connection, nut are only used when ``category1 == 1``, which is a collision with Player/Yoshi while he's attacking. Then ``bitfield2`` and ``category2`` determine what kind of attack is currently performed and if the sprite should react to it. the second bitfield is a 32-bit integer, and it is calculated by setting each bit to 0 or 1 based on if the sprite can collide with the apropriate attack. So the order of bits is from right to left:
 ```
 0 = ???
@@ -112,7 +111,7 @@ PhysicsInfo.bitfield2 = 0xFFBAFFFE;
 PhysicsInfo.unkShort1C = 0;
 PhysicsInfo.callback = &dEn_c::collisionCallback;
 
-this->aPhysics.initWithStruct(this, &HitMeBaby);
+this->aPhysics.initWithStruct(this, &PhysicsInfo);
 this->aPhysics.addToList();
 ```
 

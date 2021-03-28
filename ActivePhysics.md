@@ -39,6 +39,7 @@ The first four vars are kind of easy, whereas the other ones can get confusing^^
 - xDistToCenter/yDistToCenter define the offset from the sprite's position to the center of the hitbox. For example a goomba has its pos at the bottom-center. But our hitbox should have its center in the middle of the goomba. Because the goomba is 16x16 and its center is at the bottom-center, we have to move it up by 8 (half height) in order to be exactly at the center. So our ``xDistToCenter`` would be 0 since we don't have to move the hitbox to the left or right, but we have to move it upwards by 8, so ``yDistToCenter = 8``
 - Now we have our hitbox where we want it to be. xDistToEdge/yDistToEdge now define how big our hitbox is. Because the goomba is 16x16, from center to edge we have 8(xDist) and 8(yDist). So the values would be ``xDistToEdge = 8; yDistToEdge = 8``
 
+### Categories
 After we created our aPhysics-hitbox properly, we have to define what should be executed on collision and what this sprite can collide with. 
 As mentioned earlier, the categories determine what sort of collider we have. So, for example:
 ```
@@ -52,3 +53,5 @@ Player iceballs -> category1 = 6, category2 = 2
 ```
 where Player/Yoshi A refer to a normal Player/Yoshi hitbox (when walking or standing), and Player/Yoshi B refer to a player/yoshi which is attacking. In this case, the ``category2`` determines what attack is currently 
 performed. For example: Sliding penguin mario has category2 = 0xA, ground-pounding has category2 = 7, mario with a star-powerup has category2 = 3, ...
+
+### Bitfields

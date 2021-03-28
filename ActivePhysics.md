@@ -14,6 +14,7 @@ this->aPhysics.addToList();
 After calling this the aPhysics will be checked for collision every frame and apply the apropriate actions(when calling ``this->aPhysics.removeFromList();`` then it will be removed from the list and no longer be updated.)
 
 ## Setting up hitbox and collision
+___
 But it would not work yet because we haven't specified how big our hitbox is, or what should be executed when collided with a player, or a sprite, ....
 So basically we have to initialize our aPhysics var with all that information in order to work correctly. This is done by a class(actually a struct) inside the ActivePhysics, called ``ActivePhysics::Info``. It looks like this:
 

@@ -3,7 +3,7 @@
 The ActivePhysics-class is necessary for collision detection between two sprites. There is another class which deals with collision, called ``Physics``, but this class is used
 for collision with solid objects like a wall or the ground, where Mario can't move through. But the ``ActivePhysics`` are for collision between two actors and can have custom callbacks, for example the clock should not be solid, but it should disappear and increase the timer when collided with the player. And this is where the ActivePhysics comes intoplay. It defines a hitbox for your sprite and reacts to collision with other sprites/powerups/...
 ___
-# Adding and removing ActivePhysics - The ``aPhysics`` object 
+## Adding and removing ActivePhysics - The ``aPhysics`` object 
 So to start it is necessary to say that every sprite which inherits from ``dEn_c`` (Standard sprite class, most of custom sprites should inherit from this) already has an ActivePhysics-object.
 This object is called ``aPhysics`` and can be used everywhere inside your sprite-class. But this ActivePhysics won't do anything if it is not initialized manually inside the sprite class. 
 Usually the intialization part is done in ``onCreate`` when the sprite is loaded and created. But how can we actually initialize it?
@@ -13,7 +13,7 @@ this->aPhysics.addToList();
 ```
 After calling this the aPhysics will be checked for collision every frame and apply the apropriate actions(when calling ``this->aPhysics.removeFromList();`` then it will be removed from the list and no longer be updated.)
 
-# Setting up hitbox and collision
+## Setting up hitbox and collision
 But it would not work yet because we haven't specified how big our hitbox is, or what should be executed when collided with a player, or a sprite, ....
 So basically we have to initialize our aPhysics var with all that information in order to work correctly. This is done by a class(actually a struct) inside the ActivePhysics, called ``ActivePhysics::Info``. It looks like this:
 

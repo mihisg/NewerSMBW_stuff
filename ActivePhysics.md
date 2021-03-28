@@ -60,7 +60,7 @@ The bitfields determine what this sprite can collide with. When a collision betw
 a callback for this collision which should be called. ``bitfield1`` is a 8-bit integer, and every bit specifies a collision-type. For a collision between actors A and
 B to occur, then ``A.bitfield1 & (1 << B.category1)`` must be non-zero, and ``B.bitfield1 & (1 << A.category1)`` must also be non zero. This means, at the beginning you have your 8-bit value ``0000 0000``. If your sprite should be able to collide with normal Mario, which has ``category1 = 0``, then the right most bit of your ``bitfield1`` has to be set to 1. If it should be able to collide with attacking-Mario(``category1 = 1``), then the second bit has to be set to 1. So we have
 ``bitfield1 = 0000 0011``. If your sprite can collide with other sprites(``category1 = 3``), the fourth bit has to be set to 1. Same for the other bits(fifth bit if it should collide with a balloon, sixth bit if shold collide with collectibles, seventh if should collide with fireballs/iceballs. Btw: No idea what the third and eight bit are doing, just set the third to 1 and the eight to 0). So a normal sprite would have a value like ``01001111`` which is ``bitfield1 = 0x4F`` in hex. 
----
+
 ``bitfield2`` and ``category2`` have the same connection, nut are only used when ``category1 == 1``, which is a collision with Player/Yoshi while he's attacking. Then ``bitfield2`` and ``category2`` determine what kind of attack is currently performed and if the sprite should react to it. the second bitfield is a 32-bit integer, and it is calculated by setting each bit to 0 or 1 based on if the sprite can collide with the apropriate attack. So the order of bits is from right to left:
 ```
 0 = ???
@@ -116,3 +116,27 @@ this->aPhysics.addToList();
 ```
 
 ## Collision Callbacks
+Depending on what type of collision occured, the ``dEn_c::collisionCallback`` will automatically call the correct function to solve that collision. Those functions
+are contained in the ``dEn_c`` class and are all virtual(they contain nothing except ``return true``). To specify what should happen with your sprite when a collision occurs, you will have to override these methods in your sprite. There are three main functions:
+```c++	
+virtual void spriteCollision(ActivePhysics *apThis, ActivePhysics *apOther);	//called when collided with another sprite
+virtual void playerCollision(ActivePhysics *apThis, ActivePhysics *apOther);	//called when collided with a player
+virtual void yoshiCollision(ActivePhysics *apThis, ActivePhysics *apOther);	//called when collided with Yoshi
+```
+But there are a lot more functions you can override. They are used when your sprite collides with the player performing a certain action or attack. All of them are
+automatically called by the ``dEn_c::collisionCallback``, too:
+```c++
+virtual bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat8_FencePunch(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat9_RollingObject(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther);
+virtual bool collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther);
+```

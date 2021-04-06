@@ -53,7 +53,7 @@ CREATE_STATE(MyGoomba, Turn);
 CREATE_STATE(MyGoomba, Die);
 ```
 This step maybe seems confusing because why do we have to do it twice, one time with ``DECLARE_STATE`` inside the class and the other time by using ``CREATE_STATE``
-outside of your class. Well, this is how the code is structured in NSMBW (explanation is given at the end of the document in the ``insider-Knowledge``-section.
+outside of your class? Well, this is how the code is structured in NSMBW (explanation is given at the end of the document in the ``insider-Knowledge``-section.
 
 ## Use the states and tell the game what do to in each state
 

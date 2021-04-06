@@ -10,7 +10,7 @@ ___
 ## Declaring states in NSMBW
 
 New Super Mario Bros. Wii uses the discribed state-technique very often, and it's a main concept of sprite programming there. But how do we use states in NSMBW's code?
-Let's consider we have a simple goomba-sprite, which states does it maybe have? This is basically the same like asking what different behaviours a goomba has. 
+Let's consider we have a simple goomba-sprite, which states does it maybe have? This is basically the same like asking what different behaviour a goomba has. 
 First, a goomba is able to walk in a certain direction, so we can use a state called ``Walk`` for this. Also the goomba has to turn around when hitting a wall or 
 another sprite, so we would have a ``Turn``-state. Also the goomba should be able to die when the player jumps on it or throws a fireball or something similar.
 So we would have three states. To basically tell the NSMBW-engine that we are using states for our sprite, we simply write

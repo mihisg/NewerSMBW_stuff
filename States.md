@@ -129,24 +129,28 @@ void MyGoomba::endState_Walk() {
 void MyGoomba::beginState_Turn() {
     //called once -> define if should turn right or left
 }
-void MyGoomba::executeState_Walk() {
+void MyGoomba::executeState_Turn() {
     rot.y += 2;     //rotate it a little bit in the right direction
     //upadte animation
 }
-void MyGoomba::endState_Walk() {
+void MyGoomba::endState_Turn() {
     //nothing here
 }
 
 //Die state
-void MyGoomba::beginState_Walk() {
+void MyGoomba::beginState_Die() {
     //called once -> remove my ActivePhysics to not react to collision anymore
 }
-void MyGoomba::executeState_Walk() {
+void MyGoomba::executeState_Die() {
     //play a sound
     //fall down the screen
     //upadte die-animation
 }
-void MyGoomba::endState_Walk() {
+void MyGoomba::endState_Die() {
     //Delete the object
 }
 ```
+
+## Transition between states
+There are some conditions where we want our sprite to change its state. If our Goomba is walking and hits a wall, it should turn. So let's consider we have a function
+which tells us that the goomba collides with a wall and should turn. We then could use ``doStateChange(dStateBase_c* state)`` to change the ``acState`` variable and move to another state. The ``doStateChange`` function is also included in the ``dEn_c`` class. Remember that there is a variable for every state created automatically by the ``DECLARE_STATE`` and ``CREATE_STATE``. This variable is called ``StateID_NAME`` and this is the one we have to put in as a parameter in ``doStateChange``(as a pointer!). Our goomba would call the ``endState_Walk()`` function now and sets its ``acState`` to ``StateID_Turn``. Then it calls ``beginState_Turn()`` function once, and after that now ``executeState_Turn()`` is called every frame instead of ``executeState_Walk()``.

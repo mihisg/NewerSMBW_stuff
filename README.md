@@ -54,9 +54,9 @@ class daTestSprite: public dEn_c {
     bool calculateTileCollisions();
     
     //now all the collision functions. Actually there are a lot, but the most common used ones are:
-    void playerCollision(ActivePhysics* apThis, ActivePhysics apOther);
-    void spriteCollision(ActivePhysics* apThis, ActivePhysics apOther);
-    void yoshiCollision(ActivePhysics* apThis, ActivePhysics apOther);
+    void playerCollision(ActivePhysics* apThis, ActivePhysics* apOther);
+    void spriteCollision(ActivePhysics* apThis, ActivePhysics* apOther);
+    void yoshiCollision(ActivePhysics* apThis, ActivePhysics* apOther);
     
     //collision with Mario when he has a Star
     bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);	
